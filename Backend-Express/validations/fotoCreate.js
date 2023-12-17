@@ -1,4 +1,3 @@
-
 /**
  * @type {import("express-validator").Schema}
  */
@@ -11,7 +10,19 @@ module.exports = {
     },
     name: {
         in: ["body"],
-        isLength: { options: { min: 1 } },
+        custom: {
+            options: (value) => {
+                if (!value) {
+                    throw new Error('Il campo name è obbligatorio.');
+                }
+                return true;
+            },
+        },
+        isLength: {
+            options: {
+                min: 1,
+            },
+        },
     },
     category: {
         in: ["body"],

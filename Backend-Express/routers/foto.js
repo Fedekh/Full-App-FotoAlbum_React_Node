@@ -6,6 +6,8 @@ const { body, checkSchema, query } = require("express-validator");
 const fotoCreate = require("../validations/fotoCreate");
 const { checkValidity } = require("../middleware/schemaValidator.js");
 const multer = require("multer");
+const authHandler = require("../middleware/authHandler.js");
+const checkUserRole = require("../middleware/authRoleHandler.js");
 
 //per ora salviamo i file frontend in public
 const storage = multer.diskStorage({
@@ -25,16 +27,21 @@ router.get('/:id', fotoController.show);
 
 
 router.post('/',
-    // multer({ storage: storage }).single("image"),
-    checkSchema(fotoCreate),
-    checkValidity,
+    authHandler,                                         //recupera JWT e USER
+    multer({ storage: storage }).single("image"),       //middleware uploadfile
+    checkSchema(fotoCreate),                         //middleware schema input
+    checkValidity,                                  //middleware validazione input
+    checkUserRole(['admin', 'superadmin']),             //middleware ruoli
     fotoController.store);
 
 
 router.put('/:id', fotoController.update);
 
 
-router.delete('/:id', fotoController.destroy);
+router.delete('/:id',
+    authHandler,                             //recupera JWT e USER
+    checkUserRole(['admin', 'superadmin']),  //middleware ruoli
+    fotoController.destroy);
 
 
 

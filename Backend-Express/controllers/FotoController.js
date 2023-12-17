@@ -50,7 +50,6 @@ async function index(req, res, next) {
 
 
 async function show(req, res, next) {
-    // const id = req.params.id;
     const { id } = req.params;
 
     const data = await prisma.foto.findUnique({
@@ -68,43 +67,93 @@ async function show(req, res, next) {
 
 async function store(req, res, next) {
     const validation = validationResult(req);
+
+    if (!validation.isEmpty()) {
+        console.log("Errore di validazione:", validation.array());
+        return res.status(422).json({ error: "Controllare i dati inseriti", details: validation.array() });
+    }
+
+    const userId = req.user.id;
+    const datiInIngresso = req.validatedData;
     const image = req.file;
 
-    if (!validation.isEmpty()) return next(new ValidationError("Controllare i dati inseriti", validation.array()));
-
-    const datiInIngresso = req.validatedData;
-
     try {
-        console.log("datiInIngresso:", datiInIngresso);
+        console.log("Dati in ingresso:", datiInIngresso);
 
         const query = {
             name: datiInIngresso.name,
             description: datiInIngresso.description,
             visible: datiInIngresso.visible,
+            image: image ? image.filename : 'percorso_o_URL_dell_immagine_di_default.jpg',
+            userId: userId
         };
 
-        const newFoto = await prisma.foto.create(
-            {
-                data: query,
+        const { categories } = req.body;
+
+        if (categories) {
+            const categoryIds = categories.split(',').map((idCategory) => +idCategory.trim());
+
+            query.categories = {
+                connect: categoryIds.map((categoryId) => ({
+                    id: categoryId
+                }))
+            };
+        }
+
+
+
+        const newFoto = await prisma.foto.create({
+            data: query,
+            include: {
+                categories: {
+                    select: {
+                        id: true,
+                        name: true
+                    }
+                }
             }
-        );
+        });
 
         return res.json(newFoto);
 
-    } catch (e) {
-        console.error("Errore durante la creazione della foto:", e);
-        return next(new Error("Errore durante la creazione della foto"));
+    } catch (error) {
+        console.error("Errore durante la creazione della foto:", error);
+        return res.status(500).json({ error: "Errore durante la creazione della foto", details: error.message });
     }
 }
+
 
 async function update(req, res, next) {
 
 }
 
+
 async function destroy(req, res, next) {
+    try {
+        const { id } = req.params;
+        const data = await prisma.foto.findUnique({
+            where: {
+                id: parseInt(id),
+            },
+        });
 
+        if (!data) {
+            const notFound = new NotFound("La foto indicata non è stata trovata.");
+            res.status(notFound.status).json(notFound.resp());
+
+        }
+
+        await prisma.foto.delete({
+            where: {
+                id: parseInt(id),
+            },
+        });
+
+        return res.json({ message: `${data.name} è stato eliminato con successo` });
+    } catch (error) {
+        next(error);
+    }
 }
-
 
 
 
