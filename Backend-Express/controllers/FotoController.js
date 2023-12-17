@@ -60,7 +60,7 @@ async function show(req, res, next) {
 }
 
 async function store(req, res, next) {
-
+    return console.log('regretg');
 }
 
 async function update(req, res, next) {
