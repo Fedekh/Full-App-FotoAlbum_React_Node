@@ -2,11 +2,9 @@ const express = require("express");
 const path = require("path");
 const router = express.Router();
 const fotoController = require("../controllers/FotoController");
-//const { body, checkSchema, query } = require("express-validator");
-//const pizzaCreate = require("../validations/pizzaCreate");
-//const { checkValidity } = require("../middlewares/schemaValidator");
-//const authHandler = require("../middlewares/authHandler");
-//const authRoleHandler = require("../middlewares/authRoleHandler");
+const { body, checkSchema, query } = require("express-validator");
+const fotoCreate = require("../validations/fotoCreate");
+const { checkValidity } = require("../middleware/schemaValidator.js");
 const multer = require("multer");
 
 //per ora salviamo i file frontend in public
@@ -26,7 +24,11 @@ router.get('/', fotoController.index);
 router.get('/:id', fotoController.show);
 
 
-router.post('/', fotoController.store);
+router.post('/',
+    // multer({ storage: storage }).single("image"),
+    checkSchema(fotoCreate),
+    checkValidity,
+    fotoController.store);
 
 
 router.put('/:id', fotoController.update);

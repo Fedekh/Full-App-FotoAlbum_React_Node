@@ -67,6 +67,34 @@ async function show(req, res, next) {
 
 
 async function store(req, res, next) {
+    const validation = validationResult(req);
+    const image = req.file;
+
+    if (!validation.isEmpty()) return next(new ValidationError("Controllare i dati inseriti", validation.array()));
+
+    const datiInIngresso = req.validatedData;
+
+    try {
+        console.log("datiInIngresso:", datiInIngresso);
+
+        const query = {
+            name: datiInIngresso.name,
+            description: datiInIngresso.description,
+            visible: datiInIngresso.visible,
+        };
+
+        const newFoto = await prisma.foto.create(
+            {
+                data: query,
+            }
+        );
+
+        return res.json(newFoto);
+
+    } catch (e) {
+        console.error("Errore durante la creazione della foto:", e);
+        return next(new Error("Errore durante la creazione della foto"));
+    }
 }
 
 async function update(req, res, next) {
