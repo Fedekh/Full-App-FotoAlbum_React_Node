@@ -26,9 +26,9 @@ async function index(req, res, next) {
         };
     }
 
-    const total = await prisma.pizza.count({ where: queryFilter });
+    const total = await prisma.foto.count({ where: queryFilter });
 
-    const data = await prisma.pizza.findMany({
+    const data = await prisma.foto.findMany({
         skip: (page - 1) * perPage,
         // elementi per pagina
         take: perPage,
@@ -43,8 +43,20 @@ async function index(req, res, next) {
     });
 }
 
-async function show(req, res, next) {
 
+async function show(req, res, next) {
+    // const id = req.params.id;
+    const { id } = req.params;
+
+    const data = await prisma.foto.findUnique({
+        where: {
+            id: parseInt(id),
+        },
+    });
+
+    if (!data) return next(new NotFound("La foto indicata non è stata trovata."));
+
+    return res.json(data);
 }
 
 async function store(req, res, next) {
