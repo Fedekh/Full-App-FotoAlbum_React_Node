@@ -7,24 +7,34 @@ const AuthError = require("../exceptions/AuthError");
 
 
 async function index(req, res, next) {
-    // Permetto di filtrare per name, price, available
     try {
-        const filters = req.query.filter;
+        const filters = req.query;
         const queryFilter = {};
         const page = req.query.page || 1;
         const perPage = 20;
 
-        // Se ho dei filtri e se questi contenono il campo name
+        console.log(filters);
         if (filters && filters.name) {
             queryFilter.name = {
                 contains: filters.name,
             };
         }
 
-        // Se ho dei filtri e se questi contenono il campo available
-        if (filters && filters.available) {
-            queryFilter.available = {
-                equals: filters.available === "true" || filters.available === "1",
+        if (filters && filters.visible) {
+            queryFilter.visible = {
+                equals: filters.visible === "true" || filters.visible === "1",
+            };
+        }
+
+        if (filters && filters.categories) {
+            const categoryIds = filters.categories.split(',').map(id => parseInt(id.trim()));
+
+            queryFilter.categories = {
+                some: {
+                    id: {
+                        in: categoryIds
+                    }
+                }
             };
         }
 
@@ -34,6 +44,9 @@ async function index(req, res, next) {
             skip: (page - 1) * perPage,
             take: perPage,
             where: queryFilter,
+            include: {
+                categories: true,
+            },
         });
 
         return res.json({
@@ -42,10 +55,10 @@ async function index(req, res, next) {
             total,
             data
         });
+
     } catch (error) {
-        // Gestione degli errori del server
-        console.error("Errore durante la gestione della richiesta :", error);
-        return res.status(500).json({ error: "Errore interno del server" });
+        console.error("Errore durante la gestione della richiesta:", error);
+        return res.status(500).json({ error: "Errore interno del server", details: error.message });
     }
 }
 
@@ -75,8 +88,8 @@ async function store(req, res, next) {
     }
 
     const userId = req.user.id;
-    const datiInIngresso = req.validatedData;
     const image = req.file;
+    const datiInIngresso = { ...req.validatedData, image: image.filename, userId };
 
     try {
         console.log("Dati in ingresso:", datiInIngresso);
@@ -100,8 +113,6 @@ async function store(req, res, next) {
                 }))
             };
         }
-
-
 
         const newFoto = await prisma.foto.create({
             data: query,

@@ -1,8 +1,7 @@
 const express = require("express");
-const path = require("path");
 const router = express.Router();
 const fotoController = require("../controllers/FotoController");
-const { body, checkSchema, query } = require("express-validator");
+const { checkSchema } = require("express-validator");
 const fotoCreate = require("../validations/fotoCreate");
 const { checkValidity } = require("../middleware/schemaValidator.js");
 const multer = require("multer");

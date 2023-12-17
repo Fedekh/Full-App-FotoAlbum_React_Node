@@ -40,17 +40,39 @@ async function show(req, res, next) {
 }
 
 
-// async function store(req, res, next) {
-//     return console.log('regretg');
-// }
+async function store(req, res, next) {
+    try {
+        const validation = validationResult(req);
 
-// async function update(req, res, next) {
+        if (!validation.isEmpty()) {
+            console.log("Errore di validazione:", validation.array());
+            return res.status(422).json({ error: "Controllare i dati inseriti", details: validation.array() });
+        }
 
-// }
+        const userId = req.user.id;
+        const datiInIngresso = { ...req.validatedData, userId };
 
-// async function destroy(req, res, next) {
+        const newCategory = await prisma.category.create({
+            data: datiInIngresso
+        });
 
-// }
+        return res.json(newCategory);
+    } catch (error) {
+        console.error("Errore durante la creazione della categoria:", error);
+        return res.status(500).json({ error: "Errore durante la creazione della categoria", details: error.message });
+    }
+}
+
+
+async function update(req, res, next) {
+    return console.log('regretg');
+
+}
+
+async function destroy(req, res, next) {
+    return console.log('regretg');
+
+}
 
 
 
@@ -61,7 +83,7 @@ async function show(req, res, next) {
 module.exports = {
     index,
     show,
-    // store,
-    // update,
-    // destroy,
+    store,
+    update,
+    destroy,
 };

@@ -23,6 +23,7 @@ async function register(req, res, next) {
     /**Estraggo i dati validati dal middleware checkValidity
     scartando qualsiasi altra chiave non prevista */
     try {
+        const sanitizedData = matchedData(req);
         sanitizedData.password = await bcrypt.hash(sanitizedData.password, 10);
 
         const user = await prisma.user.create({
@@ -36,7 +37,7 @@ async function register(req, res, next) {
                 role: true,
             },
         });
-
+        console.log(user);
         const token = jsonwebtoken.sign(user, process.env.JWT_SECRET, {
             expiresIn: "10000000h",
         });
@@ -49,7 +50,7 @@ async function register(req, res, next) {
 
     } catch (error) {
         console.error("Registration failed:", error);
-        res.status(500).json({ error: "Registration failed" });
+        res.status(500).json({ error: "Registration failed", details: error.message });
     }
 
 }
