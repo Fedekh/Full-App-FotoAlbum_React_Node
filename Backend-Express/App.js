@@ -5,6 +5,8 @@ const cors = require("cors");
 const port = 3000 || process.env.PORT;
 
 const fotoRouter = require('./routers/foto');
+const categoryRouter = require('./routers/category');
+const authRouter = require('./routers/auth');
 
 // Registro il middleware per la gestione del CORS
 app.use(cors({
@@ -25,6 +27,8 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.use('/foto', fotoRouter);
+app.use('/category', categoryRouter);
+app.use('', authRouter);
 
 // Registro il middleware per la gestione degli errori
 // app.use(errorsHandlerMiddleware);

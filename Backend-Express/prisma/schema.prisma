@@ -16,12 +16,13 @@ model Foto {
   description String?    @db.Text
   image       String?    @db.Text
   visible     Boolean    @default(true)
-  category    Category[]
+  userId      Int? // Relazione N:1 con User
+  user        User?      @relation(fields: [userId], references: [id])
+  categories  Category[] // Relazione N-N con Category
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
 
-// relazione N-N
 model Category {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar(100)
@@ -35,7 +36,8 @@ model User {
   email     String   @unique
   name      String
   password  String
-  role      String   @default("user")
+  role      String?  @default("user")
+  fotos     Foto[] // Relazione 1:N con Foto
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
