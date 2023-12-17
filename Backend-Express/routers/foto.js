@@ -35,15 +35,19 @@ router.post('/',
     fotoController.store);
 
 
-router.put('/:id', fotoController.update);
+router.put('/:id',
+    authHandler,                                         //recupera JWT e USER
+    multer({ storage: storage }).single("image"),       //middleware uploadfile
+    checkSchema(fotoCreate),                         //middleware schema input
+    checkValidity,                                  //middleware validazione input
+    checkUserRole(['admin', 'superadmin']),             //middleware ruoli
+    fotoController.update);
 
 
 router.delete('/:id',
     authHandler,                             //recupera JWT e USER
     checkUserRole(['admin', 'superadmin']),  //middleware ruoli
     fotoController.destroy);
-
-
 
 
 
