@@ -89,7 +89,7 @@ async function store(req, res, next) {
 
     const userId = req.user.id;
     const image = req.file;
-    const datiInIngresso = { ...req.validatedData, image: image.filename, userId };
+    const datiInIngresso = { ...req.validatedData, image: image, userId };
 
     try {
         console.log("Dati in ingresso:", datiInIngresso);
@@ -98,7 +98,7 @@ async function store(req, res, next) {
             name: datiInIngresso.name,
             description: datiInIngresso.description,
             visible: datiInIngresso.visible,
-            image: image ? image.filename : 'percorso_o_URL_dell_immagine_di_default.jpg',
+            image: image ? (image.filename ? image.filename : 'percorso_o_URL_dell_immagine_di_default.jpg') : 'percorso_o_URL_dell_immagine_di_default.jpg',
             userId: userId
         };
 
