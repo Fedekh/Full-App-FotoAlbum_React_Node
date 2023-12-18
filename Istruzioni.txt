@@ -1,0 +1,3 @@
+For back-end run "npm run s"
+
+For front-end run "npm run dev"
