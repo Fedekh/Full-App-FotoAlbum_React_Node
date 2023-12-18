@@ -26,7 +26,7 @@ model Foto {
 model Category {
   id        Int      @id @default(autoincrement())
   name      String   @unique @db.VarChar(100)
-  fotos     Foto[]
+  fotos     Foto[] // Relazione N-N con Foto
   userId    Int // Relazione N:1 con User
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
@@ -38,9 +38,16 @@ model User {
   email      String     @unique
   name       String
   password   String
-  role       String?    @default("user")
+  role       String    @default("user")
   fotos      Foto[] // Relazione 1:N con Foto
   categories Category[] // Relazione 1:N con Category
+  roles      Role[]
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
+}
+
+model Role {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  users User[]
 }

@@ -25,13 +25,11 @@ module.exports = (req, res, next) => {
          */
         const user = jsonwebtoken.verify(token, process.env.JWT_SECRET);
 
-        // Passare i dati dell'utente alla req in modo che possiamo accedervi nei controller
+        // Passare i dati dell'utente alla req in modo che possiamo averli nei controller
         req["user"] = user;
 
-        // Invocare next()
         next();
     } catch (error) {
-        // Gestire l'errore in modo appropriato
         if (error instanceof jsonwebtoken.TokenExpiredError) {
             return res.status(401).json({ error: "Token scaduto" });
         } else if (error instanceof jsonwebtoken.JsonWebTokenError) {
@@ -41,4 +39,3 @@ module.exports = (req, res, next) => {
         }
     }
 }
-/**si gestisce la protezione di alcune rotte CRUD tale per cui sono raggiungibli-eseguibili solo da admin */
