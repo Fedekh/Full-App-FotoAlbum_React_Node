@@ -17,29 +17,51 @@ async function index(req, res, next) {
   }
 }
 
-async function changeRole(req, res, next) {
-    try {
-        const userId = +req.params.id;
-        const newRole = req.body.role;
-        console.log(newRole);
-        
-         // Verifica se userId è un numero valido
-         if (isNaN(userId) || userId <= 0) throw new AuthError(`ID non valido`);
+async function createRole(req, res, next) {
+  try {
+    // Validazione input
+    const newRole = req.body.role;
 
-        // Aggiorna il ruolo dell'utente nel database
-        const updatedUser = await prisma.user.update({
-            where: { id: userId },
-            data: { role: newRole },
-        });
+    // Creazione del ruolo
+    const createdRole = await prisma.role.create({
+      data: { ...newRole },
+    });
 
-        // Restituisci i dettagli dell'utente aggiornato
-        res.json({ userToUpdate: updatedUser });
-    } catch (error) {
-        console.error("Error in changing user role:", error.message);
-        res.status(500).json({ error: "Error in changing user role", details: error.message });
-    }
+    res.status(201).json({ role: createdRole });
+  } catch (error) {
+    console.error("Error in creating user role:", error.message);
+    res.status(500).json({
+      error: "Error in creating user role",
+      details: error.message,
+    });
+  }
 }
 
+
+async function changeRole(req, res, next) {
+  try {
+    const userId = +req.params.id;
+    const newRole = req.body.role;
+    console.log(newRole);
+
+    // Verifica se userId è un numero valido
+    if (isNaN(userId) || userId <= 0) throw new AuthError(`ID non valido`);
+
+    // Aggiorna il ruolo dell'utente nel database
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { role: newRole },
+    });
+
+    // Restituisci i dettagli dell'utente aggiornato
+    res.json({ userToUpdate: updatedUser });
+  } catch (error) {
+    console.error("Error in changing user role:", error.message);
+    res
+      .status(500)
+      .json({ error: "Error in changing user role", details: error.message });
+  }
+}
 
 async function register(req, res, next) {
   /**
@@ -58,7 +80,6 @@ async function register(req, res, next) {
         id: true,
         email: true,
         name: true,
-        role: true,
       },
     });
     const token = jsonwebtoken.sign(user, process.env.JWT_SECRET, {
@@ -145,5 +166,6 @@ module.exports = {
   register,
   login,
   changeRole,
+  createRole,
   me,
 };

@@ -28,4 +28,9 @@ router.post(
   authController.changeRole
 );
 
+router.post(
+  "/createrole",
+  authController.createRole
+);
+
 module.exports = router;

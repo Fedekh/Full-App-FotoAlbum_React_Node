@@ -60,11 +60,4 @@ module.exports = {
     },
     errorMessage: `La password deve essere lunga almeno 8 caratteri, contenere almeno una lettera maiuscola, una minuscola, un numero e un carattere speciale`,
   },
-  role: {
-    in: ["body"],
-    optional: true,
-    isString: {
-      errorMessage: "Il ruolo deve essere una stringa",
-    },
-  },
 };
