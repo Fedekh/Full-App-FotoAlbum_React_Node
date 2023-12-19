@@ -11,6 +11,7 @@ const changeRole = require("../validations/changeRole");
 const createRole = require("../validations/createRole");
 
 router.get("/user", authController.index);
+router.get("/getroles", authController.getAllRoles);
 
 router.post(
   "/register",

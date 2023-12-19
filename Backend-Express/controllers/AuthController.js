@@ -7,13 +7,36 @@ const AuthError = require("../exceptions/AuthError");
 
 async function index(req, res, next) {
   try {
-    return res.json({
+    const totalUsers = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+      },
+    });
+
+    res.json({
       total: await prisma.user.count(),
-      data: await prisma.user.findMany(),
+      data: totalUsers,
     });
   } catch (error) {
     console.error(error);
     return next(new Error("Errore durante il recupero degli utenti"));
+  }
+}
+
+async function getAllRoles(req, res, next) {
+  try {
+    const totalRoles = await prisma.role.findMany();
+
+    res.json({
+      total: await prisma.role.count(),
+      totalRoles,
+    });
+  } catch (error) {
+    console.error(error);
+    return next(new Error("Errore durante il recupero dei ruoli"));
   }
 }
 
@@ -26,10 +49,13 @@ async function createRole(req, res, next) {
 
     // Creazione del ruolo
     const createdRole = await prisma.role.create({
-      data: newRole
+      data: newRole,
     });
 
-    res.status(201).json({ createdRole });
+    res.status(201).json({
+      createdRole,
+      message: `Ruolo ${changeRole.name} creato correttamente`,
+    });
   } catch (error) {
     console.error("Error in creating user role:", error.message);
     res.status(500).json({
@@ -38,7 +64,6 @@ async function createRole(req, res, next) {
     });
   }
 }
-
 
 async function changeRole(req, res, next) {
   try {
@@ -49,7 +74,8 @@ async function changeRole(req, res, next) {
     if (isNaN(userId) || userId <= 0) throw new AuthError(`ID non valido`);
 
     // Verifica se roleId è un numero valido
-    if (isNaN(roleId) || roleId <= 0) throw new Error(`ID del ruolo non valido`);
+    if (isNaN(roleId) || roleId <= 0)
+      throw new Error(`ID del ruolo non valido o inesistente`);
 
     // Trova il ruolo associato all'ID
     const role = await prisma.role.findUnique({
@@ -62,10 +88,20 @@ async function changeRole(req, res, next) {
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: { role: role.name }, // Usa il nome del ruolo
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+      },
     });
 
-    // Restituisci i dettagli dell'utente aggiornato
-    res.json({ userToUpdate: updatedUser });
+    res.json({
+      userToUpdate: updatedUser,
+      message: `Ruolo dell'utente ${updatedUser.name.toUpperCase()} cambiato correttamente in ${
+        updatedUser.role
+      }`,
+    });
   } catch (error) {
     console.error("Error in changing user role:", error.message);
     res.status(500).json({
@@ -74,7 +110,6 @@ async function changeRole(req, res, next) {
     });
   }
 }
-
 
 async function register(req, res, next) {
   /**
@@ -176,6 +211,7 @@ async function me(req, res, next) {
 
 module.exports = {
   index,
+  getAllRoles,
   register,
   login,
   changeRole,
