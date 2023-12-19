@@ -29,16 +29,14 @@ module.exports = {
       errorMessage: "L'email è obbligatoria",
     },
     custom: {
-      // value è il valore dell'email. Viene passata automaticamente da express-validator
-      options: async (value) => {
+      options: async (mail) => {
         // Cerco se esiste a db un utente con la stessa email
         const alreadyExists = await prisma.user.findUnique({
           where: {
-            email: value,
+            email: mail,
           },
         });
 
-        // Se alreadyExists ha un valore, vuol dire che la mail esiste già
         if (alreadyExists) {
           return Promise.reject("L'email inserita è già in uso");
         }
