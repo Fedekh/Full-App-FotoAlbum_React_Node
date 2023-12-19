@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { BlogProvider } from '../contexts/BlogContext';
 import FotoList from '../components/FotoList'
 

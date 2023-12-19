@@ -10,8 +10,11 @@ const authRouter = require('./routers/auth');
 
 // Registro il middleware per la gestione del CORS
 app.use(cors({
-    origin: ["http://localhost"],
-}));
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+    optionsSuccessStatus: 204,
+  }));
 
 app.use(express.static("public")); //per gestire cartella public
 

@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import FotoBlog from "./pages/FotoBlog";
 import Contact from "./pages/Contacts";
 import About from "./pages/About";
+import FotoShow from "./pages/FotoShow";
 
 
 
@@ -35,6 +36,7 @@ export default function App() {
           <Route element={<DefaultLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/blog" element={<FotoBlog />} />
+            <Route path="/blog/:id" element={<FotoShow />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
           </Route>

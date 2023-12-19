@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 import api from "../utility/api";
 
 // Crea il contesto
-const BlogContext = createContext();
+export const BlogContext = createContext();
 
 export function BlogProvider({ children }) {
     const [fotoList, setFotoList] = useState([]);

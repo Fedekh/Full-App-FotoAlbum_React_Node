@@ -1,26 +1,25 @@
-import axios from "axios";
+const baseUrl = "http://localhost:3000/foto/";
 
 export default async function api(path, method = "GET", body = null) {
   try {
-    const data = await axios({
+    const resp = await fetch(`${baseUrl}${path}`, {
       method,
-      url: import.meta.env.VITE_API_URL + path,
-      data: body,
+      headers: {
+        "Content-Type": body instanceof FormData ? null : "application/json",
+      },
+      body: body ? JSON.stringify(body) : null,
     });
 
-    const rt6 = data;
-    console.log(rt6)
-    // if (response.status !== 200) {
-    //   if (data.error === "TokenExpiredError" || data.error === "AuthError") {
-    //     localStorage.removeItem("token");
-    //     window.location = "/login";
-    //   }
+    if (!resp.ok) {
+      throw new Error(`Failed to fetch: ${resp.status} - ${resp.statusText}`);
+    }
 
-    //   throw new Error(data.message ?? "A causa di un errore non è possibile eseguire l'operazione richiesta.");
-    // }
+    const data = await resp.json();
+    console.log(data);
 
     return data;
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    console.error("API Error:", err);
+    throw err;
   }
 }

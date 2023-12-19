@@ -2,9 +2,23 @@ import { Link } from "react-router-dom";
 
 export default function Foto(foto) {
     const { name, description, image, id } = foto
+
+    function getImgUrl() {
+        // se pizza.dettaglio.image non esiste, mettiamo il placeholder
+        if (!image) {
+          return "/pizza_placeholder.webp";
+        }
+    
+        if (image.startsWith("http") || image.startsWith("data:")) {
+          return image;
+        }
+    
+        return "http://localhost:3005/" + pizza.dettaglio.image;
+      }
+
     return (
         <div className="max-w-sm rounded overflow-hidden shadow-lg">
-            <img className="w-full" src={image} alt={name} />
+            <img className="w-full" src={getImgUrl()} alt={name} />
             <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2">{name}</div>
                 <p className="text-gray-700 text-base">
