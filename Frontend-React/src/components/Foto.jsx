@@ -1,36 +1,49 @@
 import { Link } from "react-router-dom";
 
 export default function Foto(foto) {
-    const { name, description, image, id } = foto
+    const { name, description, image, id, categories, } = foto;
+
+    const apiBack = 'http://localhost:3000/foto/';
 
     function getImgUrl() {
-        // se pizza.dettaglio.image non esiste, mettiamo il placeholder
-        if (!image) {
-          return "/pizza_placeholder.webp";
-        }
-    
+        if (!image) return "/pizza_placeholder.webp";
+
         if (image.startsWith("http") || image.startsWith("data:")) {
-          return image;
+            return image; // Se l'URL dell'immagine è già completo, utilizzalo direttamente
+        } else {
+            // Altrimenti, aggiungi il percorso del backend all'URL parziale dell'immagine
+            return `${apiBack}${image}`;
         }
-    
-        return "http://localhost:3005/" + pizza.dettaglio.image;
-      }
+    }
+
+
 
     return (
-        <div className="max-w-sm rounded overflow-hidden shadow-lg">
+        <div className="max-w-sm rounded border-slate-900 overflow-hidden shadow-lg">
             <img className="w-full" src={getImgUrl()} alt={name} />
             <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">{name}</div>
-                <p className="text-gray-700 text-base">
-                    <p>Descrizione</p>
-                    {description}
-                </p>
+                <div className="font-bold text-xl mb-2">Nome : {name}</div>
+                <p className=" text-base">Descrizione: {description}</p>
             </div>
             <div className="px-6 pt-4 pb-2">
-                <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#photography</span>
-                <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#travel</span>
-                <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#winter</span>
+                <p>
+                    Categorie:
+                </p>
+                {categories ? categories?.map((categoria) => (
+                    <span
+                        key={categoria.id}
+                        className="inline-block bg-gray-500 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2"
+                    >
+                        {categoria.name}
+                    </span>
+                )) : <p>Spiacenti, categorie assenti</p>}
             </div>
+
+            <Link
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                to={`/${id}`}
+            >Info
+            </Link>
         </div>
     );
 };

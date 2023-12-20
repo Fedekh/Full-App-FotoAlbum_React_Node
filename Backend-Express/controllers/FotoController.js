@@ -4,7 +4,7 @@ const NotFound = require("../exceptions/NotFound");
 const ValidationError = require("../exceptions/ValidationError");
 const { validationResult } = require("express-validator");
 const AuthError = require("../exceptions/AuthError");
-
+const placeholder = 'https://res.cloudinary.com/practicaldev/image/fetch/s--P-zvMTgt--/c_imagga_scale,f_auto,fl_progressive,h_900,q_auto,w_1600/https://dev-to-uploads.s3.amazonaws.com/i/qyix6eyhrnc8x9c44yp2.jpg';
 async function index(req, res, next) {
   try {
     const filters = req.query;
@@ -67,9 +67,9 @@ async function index(req, res, next) {
 async function show(req, res, next) {
   try {
     const { id } = req.params;
-    const photo = await prisma.foto.findUnique({
+    const photo = await prisma.foto.findFirst({
       where: {
-        id:+id,
+        id: +id,
       },
     });
 
@@ -87,6 +87,7 @@ async function show(req, res, next) {
       .json({ error: "Si è verificato un errore interno." });
   }
 }
+
 
 async function store(req, res, next) {
   const validation = validationResult(req);
@@ -112,11 +113,7 @@ async function store(req, res, next) {
       name: datiInIngresso.name,
       description: datiInIngresso.description,
       visible: datiInIngresso.visible,
-      image: image
-        ? image.filename
-          ? image.filename
-          : "percorso_o_URL_dell_immagine_di_default.jpg"
-        : "percorso_o_URL_dell_immagine_di_default.jpg",
+      image: image ? (image.filename ? image.filename : placeholder) : placeholder,
       userId: userId,
     };
 

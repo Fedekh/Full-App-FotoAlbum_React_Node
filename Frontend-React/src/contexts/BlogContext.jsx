@@ -1,19 +1,19 @@
 import React, { createContext, useContext, useState } from "react";
-import api from "../utility/api";
+import fetchApi from "../utility/fetchApi";
 
 // Crea il contesto
-export const BlogContext = createContext();
+const BlogContext = createContext();
 
 export function BlogProvider({ children }) {
     const [fotoList, setFotoList] = useState([]);
 
     async function fetchData() {
-        const data = await api('/foto');
+        const data = await fetchApi();
         setFotoList(data.data);
     }
 
     return (
-        <BlogContext.Provider value={{ fotoList,fetchData }}>{children}</BlogContext.Provider>
+        <BlogContext.Provider value={{ fotoList, fetchData }}>{children}</BlogContext.Provider>
     );
 }
 

@@ -3,20 +3,20 @@ const app = express();
 require("dotenv").config();
 const cors = require("cors");
 const port = 3000 || process.env.PORT;
-
+const path = require('path');
 const fotoRouter = require('./routers/foto');
 const categoryRouter = require('./routers/category');
 const authRouter = require('./routers/auth');
 
 // Registro il middleware per la gestione del CORS
 app.use(cors({
-    origin: '*',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-    optionsSuccessStatus: 204,
-  }));
+  origin: '*',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204,
+}));
 
-app.use(express.static("public")); //per gestire cartella public
+app.use('/foto', express.static(path.join(__dirname, 'public')));//per gestire cartella public
 
 
 /* Registro il middleware per il parsing del body Ogni volta che verranno inviati dei dati al server 
@@ -41,5 +41,5 @@ app.use('', authRouter);
 
 
 app.listen(port, () => {
-    console.log(`App attiva su http://localhost:${port}`);
+  console.log(`App attiva su http://localhost:${port}`);
 });
