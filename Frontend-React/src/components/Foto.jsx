@@ -1,9 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function Foto(foto) {
-    
-    const { name, description, image, id, categories } = foto;
-
+export default function Foto({ name, description, image, id, categories }) {
     const apiBack = 'http://localhost:3000/foto/';
 
     function getImgUrl() {
