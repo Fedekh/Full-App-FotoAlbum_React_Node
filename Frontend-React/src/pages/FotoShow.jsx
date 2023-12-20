@@ -12,7 +12,7 @@ export default function FotoShow() {
     useEffect(() => {
         fetchData(idNumerico);     
         
-    }, [fetchData]);
+    }, []);
     
 
     return (

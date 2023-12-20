@@ -7,8 +7,8 @@ export default function FotoList() {
 
   useEffect(() => {
     fetchDataAll();
-
-  }, [fetchDataAll]);
+  }, []);
+  
 
   return (
     <div>
