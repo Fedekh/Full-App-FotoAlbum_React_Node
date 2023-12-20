@@ -3,13 +3,13 @@ import Foto from "./Foto";
 import { useEffect } from "react";
 
 export default function FotoList() {
-    const { fotoList, fetchData } = useBlog();
+    const { fotoList, fetchDataAll } = useBlog();
+
+    const fetchDataOnMount = async () => {
+        await fetchDataAll();
+    };
 
     useEffect(() => {
-        const fetchDataOnMount = async () => {
-            await fetchData();
-        };
-
         fetchDataOnMount();
     }, []);
 

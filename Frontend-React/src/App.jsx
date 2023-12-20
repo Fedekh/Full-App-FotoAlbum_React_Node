@@ -9,7 +9,7 @@ import FotoBlog from "./pages/FotoBlog";
 import Contact from "./pages/Contacts";
 import About from "./pages/About";
 import FotoShow from "./pages/FotoShow";
-
+import 'flowbite'
 
 
 /* 
