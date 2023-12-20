@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 
 export default function Foto(foto) {
-    const { name, description, image, id, categories, } = foto;
+    
+    const { name, description, image, id, categories } = foto;
 
     const apiBack = 'http://localhost:3000/foto/';
 
@@ -15,8 +16,6 @@ export default function Foto(foto) {
             return `${apiBack}${image}`;
         }
     }
-
-
 
     return (
         <div className="max-w-sm rounded border-slate-900 overflow-hidden shadow-lg">

@@ -1,4 +1,8 @@
+import { useContext } from "react"
+import { GlobalContext } from "../App"
+
 export default function Contacts(){
+  const {isLoading,setIsLoading} = useContext(GlobalContext)
     return(
 <div className="container my-24 mx-auto md:px-6">
   <section className="mb-32">

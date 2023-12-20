@@ -3,28 +3,25 @@ import Foto from "./Foto";
 import { useEffect } from "react";
 
 export default function FotoList() {
-    const { fotoList, fetchDataAll } = useBlog();
+  const { fotoList, fetchDataAll } = useBlog();
 
-    const fetchDataOnMount = async () => {
-        await fetchDataAll();
-    };
+  useEffect(() => {
+    fetchDataAll();
 
-    useEffect(() => {
-        fetchDataOnMount();
-    }, []);
+  }, [fetchDataAll]);
 
-    return (
-        <div>
-            <div className="bg-gray-800 rounded">
-                <div className="container mx-auto w-full py-11">
-                    <h1 className="text-center text-4xl font-bold">ALL Pictures</h1>
-                    <div className="flex flex-wrap gap-5 justify-center">
-                        {fotoList.map((foto, i) => (
-                            <Foto key={i} {...foto}></Foto>
-                        ))}
-                    </div>
-                </div>
-            </div>
+  return (
+    <div>
+      <div className="bg-gray-800 rounded">
+        <div className="container mx-auto w-full py-11">
+          <h1 className="text-center text-4xl font-bold">ALL Pictures</h1>
+          <div className="flex flex-wrap gap-5 justify-center">
+            {fotoList.map((foto) => (
+              <Foto key={foto.id} {...foto} />
+            ))}
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 }

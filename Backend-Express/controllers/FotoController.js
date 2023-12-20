@@ -5,6 +5,8 @@ const ValidationError = require("../exceptions/ValidationError");
 const { validationResult } = require("express-validator");
 const AuthError = require("../exceptions/AuthError");
 const placeholder = 'https://res.cloudinary.com/practicaldev/image/fetch/s--P-zvMTgt--/c_imagga_scale,f_auto,fl_progressive,h_900,q_auto,w_1600/https://dev-to-uploads.s3.amazonaws.com/i/qyix6eyhrnc8x9c44yp2.jpg';
+
+
 async function index(req, res, next) {
   try {
     const filters = req.query;

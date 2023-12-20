@@ -1,29 +1,25 @@
-import { useEffect, useState ,} from "react";
-import { useNavigate, useParams } from "react-router-dom";  // Rimuovi useSearchParams perché non sembra essere utilizzato
-import Foto from "../components/Foto";
+import { useNavigate, useParams } from "react-router-dom";
 import { useBlog } from "../contexts/BlogContext";
+import { useEffect, useState } from "react";
+import Foto from "../components/Foto";
 
 export default function FotoShow() {
     const { id } = useParams();
-    console.log(id);
     const navigation = useNavigate();
-    const { foto, fetchData } = useBlog();
-    console.log(useBlog());
-
-
-    const fetchDataOnMount = async () => {
-            await fetchData(id);
-    };
-
+    const { foto,fetchData } = useBlog();
+    const idNumerico = id ?? Number(id);
+    
     useEffect(() => {
-        fetchDataOnMount();
-    }, []);
+        fetchData(idNumerico);     
+        
+    }, [fetchData]);
+    
 
     return (
         <div>
+            <div>{console.log(foto,idNumerico)}</div>
             <button onClick={() => navigation(-1)}>Indietro</button>
-            <button onClick={fetchDataOnMount}>Ricarica Dati</button>
-            <Foto foto={foto} />
+            <Foto {...foto} />
         </div>
     );
 }
