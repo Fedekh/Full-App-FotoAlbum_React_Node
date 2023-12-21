@@ -10,9 +10,9 @@ export default function FotoShow() {
     const idNumerico = id ?? Number(id);
     
     useEffect(() => {
-        fetchData(idNumerico);     
-        
-    }, []);
+        fetchData(idNumerico);
+    }, [fetchData, idNumerico]);
+    
     
 
     return (
