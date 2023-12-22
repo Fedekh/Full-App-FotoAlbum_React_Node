@@ -8,9 +8,13 @@ import NotFound from "./pages/NotFound";
 import FotoBlog from "./pages/FotoBlog";
 import Contact from "./pages/Contacts";
 import About from "./pages/About";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import FotoShow from "./pages/FotoShow";
 import 'flowbite'
 import { BlogProvider } from "./contexts/BlogContext";
+import GuestRoutes from "./middlewares/GuestRoutes";
+import { AuthProvider } from "./contexts/AuthContext";
 
 
 /* 
@@ -31,40 +35,32 @@ export default function App() {
   return (
     <GlobalContext.Provider value={{ isLoading, setIsLoading }}> {/*contenitore + valori*/}
       <BrowserRouter>
-        <Routes>
-          {/* Rotte pubbliche */}
-          <Route element={<DefaultLayout />}>
-            <Route
-              path="/"
-              element={<Home />}
-            />
-            <Route
-              path="/blog"
-              element={<BlogProvider><FotoBlog /></BlogProvider>}
-            />
-            <Route
-              path="/blog/:id"
-              element={<BlogProvider><FotoShow /></BlogProvider>}
-            />
-            <Route
-              path="/contact"
-              element={<Contact />}
-            />
-            <Route
-              path="/about"
-              element={<About />}
-            />
-          </Route>
+        <AuthProvider>
 
-          {/* Rotte private */}
-          <Route element={<AdminLayout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-          </Route>
+          <Routes>
+            {/* Rotte pubbliche */}
+            <Route element={<DefaultLayout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/blog" element={<BlogProvider><FotoBlog /></BlogProvider>} />
+              <Route path="/blog/:id" element={<BlogProvider><FotoShow /></BlogProvider>} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/login" element={<GuestRoutes><Login /></GuestRoutes>}></Route>
+              <Route path="/register" element={<GuestRoutes><Register /></GuestRoutes>}></Route>
 
-          {/* Rotta "not found" */}
-          <Route path="*" element={<DefaultLayout>{<NotFound />}</DefaultLayout>} />
+              <Route path="/about" element={<About />} />
+            </Route>
 
-        </Routes>
+            {/* Rotte private */}
+            <Route element={<AdminLayout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+            </Route>
+
+            {/* Rotta "not found" */}
+            <Route path="*" element={<DefaultLayout>{<NotFound />}</DefaultLayout>} />
+
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </GlobalContext.Provider>
   );

@@ -1,12 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
-import { handleInputChange } from "../utils/handleInputChange";
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import fetchApi from "../utils/fetchApi";
+import fetchApi from "../utility/fetchApi";
+import { handleInputChange } from "../utility/handleInputChange";
 
 export default function Login() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const { handleLoginOrRegistration } = useAuth();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -17,6 +18,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
+      debugger
       // chiamo l'endpoint di login
       const resp = await fetchApi("/login", "POST", formData);
 
@@ -28,6 +30,7 @@ export default function Login() {
       setError(err.message);
     }
   }
+
 
 
   return (<>

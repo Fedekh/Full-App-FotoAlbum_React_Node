@@ -15,7 +15,8 @@ export default function HeaderGuest() {
                         <Link to='/about'>About</Link>
                     </ul>
                     <div className="flex items-center lg:order-2 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2focus:outline-none dark:focus:ring-gray-800">
-                        <Link to='/login'>Login</Link>
+                    <Link to='/dashboard'>Dashboard</Link>
+
                     </div>
                 </div>
             </nav>

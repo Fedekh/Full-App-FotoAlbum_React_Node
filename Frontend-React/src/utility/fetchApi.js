@@ -1,26 +1,31 @@
-const baseUrl = "http://localhost:3000/foto/";
-export default async function fetchApi(id = null, method = "GET", body = null) {
+export default async function fetchApi(path, method = "GET", body = null) {
+  const api='http://localhost:3000'
   try {
-    const url = id ? baseUrl + id : baseUrl;
-    const resp = await fetch(url, {
+    const resp = await fetch(api + path, {
       method,
+      headers: {
+        "Content-Type": body instanceof FormData ? null : "application/json",
+        "Authorization": localStorage.getItem("token") ? `Bearer ${localStorage.getItem("token")}` : null,
+      },
       body: body ? JSON.stringify(body) : null,
     });
-
+    
     const data = await resp.json();
-
+    
     if (!resp.ok) {
-      console.log("🚀 ~ file: fetchApi.js:16 ~ fetchApi ~ resp:", resp);
-      throw new Error(
-        data.message ??
-          "A causa di un errore non è possibile eseguire l'operazione richiesta."
-      );
+      
+      if(data.error === "TokenExpiredError" || data.error === "AuthError"){
+        localStorage.removeItem("token");
+        window.location = "/login";
+      }
+      
+      debugger
+      throw new Error(data.message ?? "A causa di un errore non è possibile eseguire l'operazione richiesta.");
     }
 
-    console.log("🚀 ~ file: fetchApi.js:32 ~ data.data:", data.data);
-    return data.data;
+    return data;
   } catch (err) {
-    console.error("API Error:", err);
+
     throw err;
   }
 }

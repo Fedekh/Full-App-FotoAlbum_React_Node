@@ -1,7 +1,7 @@
-// import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Dashboard() {
-//   const { user } = useAuth();
+  const { user } = useAuth();
 
   return (<>
     <div className="container mx-auto px-4">
