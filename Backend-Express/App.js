@@ -7,6 +7,7 @@ const path = require('path');
 const fotoRouter = require('./routers/foto');
 const categoryRouter = require('./routers/category');
 const authRouter = require('./routers/auth');
+console.log("ciao")
 
 // Registro il middleware per la gestione del CORS
 app.use(cors({
